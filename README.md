@@ -22,6 +22,8 @@ Autrement dit, si vous cherchez le contenu d'un cours, il faut vous placer sur l
 
 - `cyclevieprojet` : cours autour du **cycle de vie projet** et de l'industrialisation d'un projet informatique.
 
+Un accès direct est aussi disponible via [`Cycle de vie d'un projet.md`](<Cycle de vie d'un projet.md>).
+
 ### Branches prévues
 
 D'autres branches seront ajoutées progressivement, notamment pour les cours suivants :
