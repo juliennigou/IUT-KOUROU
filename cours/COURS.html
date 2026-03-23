@@ -1,0 +1,2670 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Industrialiser un projet informatique</title>
+    <link
+      rel="stylesheet"
+      href="./reveal/dist/reveal.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./reveal/dist/theme/white.css"
+      id="theme"
+    />
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --paper: rgba(255, 252, 246, 0.88);
+        --paper-strong: rgba(255, 252, 246, 0.96);
+        --ink: #1f2a24;
+        --muted: #5e675d;
+        --accent: #c8612f;
+        --accent-soft: rgba(200, 97, 47, 0.12);
+        --line: rgba(31, 42, 36, 0.12);
+        --ok: #2f6b55;
+        --warn: #9b4c28;
+        --frame-shadow: 0 26px 80px rgba(42, 37, 27, 0.14);
+        --panel-shadow: 0 14px 38px rgba(42, 37, 27, 0.08);
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--bg);
+      }
+
+      .reveal-viewport {
+        background:
+          radial-gradient(circle at top left, rgba(200, 97, 47, 0.16), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(47, 107, 85, 0.12), transparent 30%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 241, 0.5)),
+          var(--bg);
+      }
+
+      .reveal {
+        font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+        color: var(--ink);
+      }
+
+      .reveal .slides {
+        text-align: left;
+      }
+
+      .reveal .slides section {
+        box-sizing: border-box;
+        height: 100%;
+        padding: 34px 40px;
+        border: 1px solid rgba(31, 42, 36, 0.08);
+        border-radius: 28px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 250, 242, 0.96)),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 79px,
+            rgba(31, 42, 36, 0.03) 79px,
+            rgba(31, 42, 36, 0.03) 80px
+          );
+        box-shadow: var(--frame-shadow);
+      }
+
+      .reveal .slides section > *:not(.notes) {
+        position: relative;
+        z-index: 1;
+      }
+
+      .reveal p,
+      .reveal li,
+      .reveal td,
+      .reveal th {
+        text-shadow: none;
+      }
+
+      .reveal ul {
+        margin-left: 0;
+      }
+
+      .reveal li {
+        margin-bottom: 0.36rem;
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+        text-transform: none;
+      }
+
+      .reveal h1 {
+        font-size: 2.7rem;
+        margin: 0 0 0.45rem 0;
+      }
+
+      .reveal h2 {
+        font-size: 2.2rem;
+        margin: 0 0 0.4rem 0;
+      }
+
+      .reveal h3 {
+        font-size: 1.1rem;
+        margin: 0;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 880px;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.52;
+      }
+
+      .hero {
+        min-height: 560px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 22px;
+        align-items: end;
+      }
+
+      .hero-panel,
+      .panel,
+      .card,
+      .stat,
+      .callout {
+        background: var(--paper);
+        border: 1px solid rgba(31, 42, 36, 0.08);
+        box-shadow: var(--panel-shadow);
+      }
+
+      .hero-panel {
+        padding: 28px 30px 26px;
+        border-radius: 28px;
+      }
+
+      .hero-metrics {
+        display: grid;
+        gap: 14px;
+      }
+
+      .stat {
+        border-radius: 22px;
+        padding: 18px 20px;
+      }
+
+      .stat strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--accent);
+        font-size: 1.2rem;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.35;
+      }
+
+      .agenda {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 26px;
+      }
+
+      .card {
+        border-radius: 22px;
+        padding: 18px 18px 16px;
+      }
+
+      .card p,
+      .panel p,
+      .callout p,
+      .matrix li,
+      .reveal li {
+        color: var(--muted);
+        font-size: 0.94rem;
+        line-height: 1.48;
+      }
+
+      .card strong,
+      .panel strong,
+      .callout strong {
+        color: var(--ink);
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        display: grid;
+        gap: 16px;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .panel {
+        border-radius: 24px;
+        padding: 22px 24px;
+      }
+
+      .panel ul,
+      .checklist,
+      .matrix {
+        margin: 10px 0 0 0;
+        padding-left: 20px;
+      }
+
+      .mini {
+        margin: 0 0 10px 0;
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .split-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .section-number {
+        color: rgba(31, 42, 36, 0.18);
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+        font-size: 2.8rem;
+        line-height: 1;
+      }
+
+      .callout {
+        margin-top: 18px;
+        border-left: 4px solid var(--accent);
+        border-radius: 20px;
+        padding: 16px 18px;
+      }
+
+      .example-card {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 20px;
+        border-left: 4px solid var(--ok);
+        background: rgba(47, 107, 85, 0.09);
+        box-shadow: var(--panel-shadow);
+      }
+
+      .example-card p {
+        margin: 0;
+        color: #45534a;
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .case-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .case-box {
+        padding: 18px 18px 16px;
+        border-radius: 22px;
+        box-shadow: var(--panel-shadow);
+        border: 1px solid rgba(31, 42, 36, 0.08);
+      }
+
+      .case-box.bad {
+        background: rgba(155, 76, 40, 0.08);
+        border-left: 4px solid var(--warn);
+      }
+
+      .case-box.good {
+        background: rgba(47, 107, 85, 0.09);
+        border-left: 4px solid var(--ok);
+      }
+
+      .case-tag {
+        display: inline-block;
+        margin-bottom: 10px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .case-box.bad .case-tag {
+        color: var(--warn);
+      }
+
+      .case-box.good .case-tag {
+        color: var(--ok);
+      }
+
+      .case-box ul {
+        margin: 8px 0 0 0;
+        padding-left: 18px;
+      }
+
+      .case-box li,
+      .case-box p {
+        font-size: 0.86rem;
+        line-height: 1.38;
+        color: #45534a;
+      }
+
+      .artifact-snippet {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: rgba(255, 252, 246, 0.72);
+        border: 1px solid rgba(31, 42, 36, 0.08);
+        font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+        font-size: 0.75rem;
+        line-height: 1.36;
+        color: #334038;
+        white-space: pre-line;
+      }
+
+      .impact-note {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: rgba(31, 42, 36, 0.05);
+        color: #435048;
+        font-size: 0.87rem;
+        line-height: 1.4;
+      }
+
+      .example-grid .panel {
+        padding: 18px 18px 16px;
+      }
+
+      .example-grid .panel li,
+      .example-grid .panel p {
+        font-size: 0.86rem;
+        line-height: 1.38;
+      }
+
+      .compact-slide h2 {
+        font-size: 1.92rem;
+      }
+
+      .compact-slide .lead {
+        max-width: 760px;
+        font-size: 0.98rem;
+        line-height: 1.42;
+      }
+
+      .compact-slide .section-number {
+        font-size: 2.2rem;
+      }
+
+      .fil-slide {
+        box-shadow: var(--frame-shadow), inset 0 5px 0 rgba(47, 107, 85, 0.58);
+      }
+
+      .fil-slide .eyebrow {
+        background: rgba(47, 107, 85, 0.12);
+        color: var(--ok);
+      }
+
+      .exercise-slide h2 {
+        font-size: 1.92rem;
+      }
+
+      .exercise-slide .lead {
+        max-width: 760px;
+        font-size: 0.98rem;
+        line-height: 1.42;
+      }
+
+      .exercise-layout {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .exercise-box {
+        padding: 18px 18px 16px;
+        border-radius: 22px;
+        background: rgba(255, 252, 246, 0.9);
+        border: 1px solid rgba(31, 42, 36, 0.08);
+        box-shadow: var(--panel-shadow);
+      }
+
+      .exercise-box p,
+      .exercise-box li {
+        font-size: 0.9rem;
+        line-height: 1.44;
+        color: #45534a;
+      }
+
+      .exercise-box ul {
+        margin: 8px 0 0 0;
+        padding-left: 18px;
+      }
+
+      .exercise-prompt {
+        margin-top: 10px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(200, 97, 47, 0.08);
+        border-left: 4px solid var(--accent);
+        color: #48554d;
+        font-size: 0.84rem;
+        line-height: 1.42;
+        white-space: pre-line;
+      }
+
+      .exercise-slide {
+        box-shadow: var(--frame-shadow), inset 0 5px 0 rgba(200, 97, 47, 0.6);
+      }
+
+      .exercise-slide .eyebrow {
+        background: rgba(200, 97, 47, 0.12);
+        color: var(--accent);
+      }
+
+      .ai-slide {
+        box-shadow: var(--frame-shadow), inset 0 5px 0 rgba(58, 100, 128, 0.58);
+      }
+
+      .ai-slide .eyebrow {
+        background: rgba(58, 100, 128, 0.12);
+        color: #3a6480;
+      }
+
+      .ai-slide .section-number {
+        color: rgba(58, 100, 128, 0.24);
+      }
+
+      .final-slide {
+        background:
+          radial-gradient(circle at top left, rgba(200, 97, 47, 0.12), transparent 35%),
+          linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(243, 238, 228, 0.92));
+        box-shadow: var(--frame-shadow), inset 0 6px 0 rgba(31, 42, 36, 0.5);
+      }
+
+      .final-slide .eyebrow {
+        background: rgba(31, 42, 36, 0.08);
+        color: var(--ink);
+      }
+
+      .final-hero {
+        min-height: 580px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 20px;
+        align-items: stretch;
+      }
+
+      .final-copy,
+      .final-stack,
+      .final-ribbon {
+        border: 1px solid rgba(31, 42, 36, 0.08);
+        background: rgba(255, 252, 246, 0.82);
+        box-shadow: var(--panel-shadow);
+      }
+
+      .final-copy {
+        border-radius: 28px;
+        padding: 28px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .final-copy h1 {
+        margin-bottom: 10px;
+      }
+
+      .final-copy .lead {
+        max-width: 640px;
+      }
+
+      .final-stack {
+        border-radius: 28px;
+        padding: 20px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .final-point {
+        padding: 16px 16px 14px;
+        border-radius: 20px;
+        background: rgba(31, 42, 36, 0.04);
+        border: 1px solid rgba(31, 42, 36, 0.08);
+      }
+
+      .final-point strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--ink);
+        font-size: 1rem;
+      }
+
+      .final-point span {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .final-ribbon {
+        margin-top: 16px;
+        border-radius: 22px;
+        padding: 16px 18px;
+        border-left: 4px solid var(--accent);
+      }
+
+      .final-ribbon p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #445048;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .step {
+        border-top: 3px solid var(--accent);
+        border-radius: 18px;
+        padding: 16px 14px;
+        background: var(--paper-strong);
+        box-shadow: var(--panel-shadow);
+      }
+
+      .step span {
+        display: inline-block;
+        margin-bottom: 8px;
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .comparison {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+        font-size: 0.82rem;
+      }
+
+      .comparison th,
+      .comparison td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+
+      .comparison th {
+        color: var(--ink);
+        text-align: left;
+      }
+
+      .ok {
+        color: var(--ok);
+        font-weight: 700;
+      }
+
+      .warn {
+        color: var(--warn);
+        font-weight: 700;
+      }
+
+      .pill-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .pill {
+        padding: 9px 12px;
+        border-radius: 999px;
+        background: rgba(31, 42, 36, 0.06);
+        color: var(--ink);
+        font-size: 0.78rem;
+      }
+
+      .closing {
+        min-height: 560px;
+        display: grid;
+        grid-template-columns: 1fr 0.9fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .closing .panel:first-child {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        color: rgba(31, 42, 36, 0.55);
+        font-size: 0.74rem;
+      }
+
+      .reveal .progress {
+        color: var(--accent);
+        height: 5px;
+      }
+
+      .reveal .controls {
+        color: var(--accent);
+      }
+
+      .reveal .slide-number {
+        background: rgba(255, 252, 246, 0.85);
+        color: var(--ink);
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(31, 42, 36, 0.08);
+      }
+
+      .notes-popup {
+        margin: 0;
+        padding: 24px;
+        background: #f8f3e8;
+        color: #1f2a24;
+        font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      }
+
+      .notes-popup h1 {
+        margin: 0 0 14px 0;
+        font-size: 1.2rem;
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      }
+
+      .notes-popup .slide-label {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(200, 97, 47, 0.12);
+        color: #c8612f;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .notes-popup .notes-body {
+        line-height: 1.55;
+        color: #4d564f;
+      }
+
+      @media (max-width: 1100px) {
+        .hero,
+        .closing,
+        .grid-4,
+        .steps {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .agenda,
+        .grid-3,
+        .example-grid,
+        .case-grid,
+        .exercise-layout {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 780px) {
+        .hero,
+        .closing,
+        .grid-2,
+        .grid-3,
+        .grid-4,
+        .agenda,
+        .steps,
+        .example-grid,
+        .case-grid,
+        .exercise-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .reveal h1 {
+          font-size: 2.12rem;
+        }
+
+        .reveal h2 {
+          font-size: 1.82rem;
+        }
+
+        .reveal .slides section {
+          padding: 26px 24px;
+        }
+
+        .split-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <div class="hero">
+            <div class="hero-panel">
+              <div class="eyebrow">Cycle de vie projet</div>
+              <h1>Industrialiser un projet informatique</h1>
+              <p class="lead">
+                Comprendre comment passer d'une idée ou d'un prototype à un
+                projet réellement maîtrisé, reproductible et défendable.
+              </p>
+              <div class="agenda">
+                <div class="card">
+                  <h3>Comprendre</h3>
+                  <p>Pourquoi le code seul ne suffit jamais dans un projet réel.</p>
+                </div>
+                <div class="card">
+                  <h3>Structurer</h3>
+                  <p>Besoin, flux de travail, environnement et règles d'équipe.</p>
+                </div>
+                <div class="card">
+                  <h3>Fiabiliser</h3>
+                  <p>Tests, documentation, déploiement et sécurité.</p>
+                </div>
+                <div class="card">
+                  <h3>Transmettre</h3>
+                  <p>Argumenter, démontrer, former et soutenir le projet.</p>
+                </div>
+              </div>
+            </div>
+            <div class="hero-metrics">
+              <div class="stat">
+                <strong>8 parties</strong>
+                <span>Un parcours complet du cadrage jusqu'à la soutenance.</span>
+              </div>
+              <div class="stat">
+                <strong>1 fil directeur</strong>
+                <span>Réduire le hasard et rendre le projet pilotable.</span>
+              </div>
+              <div class="stat">
+                <strong>35 slides</strong>
+                <span>Un parcours détaillé avec un cas fil rouge réutilisé sur tout le cours.</span>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            Présenter le cours comme une réponse à une question simple : comment
+            éviter qu'un projet dépende seulement de l'énergie du moment ou du
+            talent de quelques personnes. Expliquer que l'industrialisation sert
+            à rendre le travail lisible, vérifiable et transmissible.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Roadmap</div>
+              <h2>Ce que l'étudiant doit savoir faire</h2>
+              <p class="lead">
+                À la fin du cours, l'objectif n'est pas seulement de connaître
+                des outils, mais de savoir les utiliser au bon moment dans un
+                projet collectif.
+              </p>
+            </div>
+            <div class="section-number">00</div>
+          </div>
+          <div class="grid-4">
+            <div class="panel">
+              <p class="mini">Analyser</p>
+              <ul>
+                <li>Lire un besoin et repérer l'essentiel</li>
+                <li>Distinguer objectif, périmètre et contrainte</li>
+                <li>Identifier les risques majeurs</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Organiser</p>
+              <ul>
+                <li>Mettre en place un dépôt distant</li>
+                <li>Découper le travail en tickets</li>
+                <li>Utiliser branches et merge requests</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Produire proprement</p>
+              <ul>
+                <li>Reproduire un environnement</li>
+                <li>Tester régulièrement</li>
+                <li>Documenter au fil du projet</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Livrer et défendre</p>
+              <ul>
+                <li>Déployer avec méthode</li>
+                <li>Sécuriser l'essentiel</li>
+                <li>Expliquer et démontrer le résultat</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Cette slide sert de carte mentale du cours. Elle montre que chaque
+            partie prépare la suivante. Le cadrage nourrit l'organisation,
+            l'organisation rend les tests possibles, la documentation aide la
+            livraison, et l'ensemble prépare la soutenance.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>Projet exemple : ResaMat, le prêt de matériel de l'IUT</h2>
+              <p class="lead">
+                Pour rendre le cours concret, on suit le même projet du début à
+                la fin : une application qui permet d'emprunter du matériel
+                pédagogique et d'en suivre l'état.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="example-grid">
+            <div class="panel">
+              <p class="mini">Utilisateurs</p>
+              <ul>
+                <li>Étudiants qui réservent un appareil</li>
+                <li>Enseignants qui valident certains prêts</li>
+                <li>Administrateurs qui gèrent le stock</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Fonctions principales</p>
+              <ul>
+                <li>Consulter le matériel disponible</li>
+                <li>Réserver sur une période donnée</li>
+                <li>Suivre les retours et incidents</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Pourquoi ce cas ?</p>
+              <ul>
+                <li>Simple à comprendre immédiatement</li>
+                <li>Assez riche pour parler d'équipe, tests et déploiement</li>
+                <li>Proche d'un besoin réaliste en contexte IUT</li>
+              </ul>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Fil conducteur :</strong> à chaque partie du cours, on se
+              demandera comment industrialiser concrètement <strong>ResaMat</strong> :
+              cadrage, tickets, environnement, tests, documentation, déploiement
+              et soutenance.
+            </p>
+          </div>
+          <aside class="notes">
+            Introduire ResaMat comme le cas de référence. L'intérêt du fil rouge
+            est que les étudiants n'ont plus à réinventer un exemple à chaque
+            notion. On peut réutiliser les mêmes utilisateurs, contraintes et
+            fonctionnalités tout au long du cours.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 1</div>
+              <h2>Qu'industrialise-t-on réellement ?</h2>
+              <p class="lead">
+                On n'industrialise pas uniquement du code. On industrialise un
+                ensemble de décisions, de livrables, de flux de travail et de
+                responsabilités.
+              </p>
+            </div>
+            <div class="section-number">01</div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p class="mini">Dimension technique</p>
+              <ul>
+                <li>Code source versionné</li>
+                <li>Dépendances et configuration explicites</li>
+                <li>Scripts, tests et artefacts de build</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Dimension organisationnelle</p>
+              <ul>
+                <li>Règles de contribution partagées</li>
+                <li>Priorités visibles dans les tickets</li>
+                <li>Décisions relisibles dans l'historique</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Dimension pédagogique et métier</p>
+              <ul>
+                <li>Justification des choix</li>
+                <li>Traçabilité de l'avancement</li>
+                <li>Capacité à reprendre ou évaluer le projet</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Message central :</strong> un projet professionnel doit
+              pouvoir être compris, repris et évalué sans dépendre de la mémoire
+              d'une seule personne.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Application à ResaMat :</strong> le projet ne se limite pas
+              à l'interface de réservation. Il faut aussi versionner le schéma de
+              données, tracer les règles de prêt, documenter les rôles et garder
+              l'historique des décisions sur le stock.
+            </p>
+          </div>
+          <aside class="notes">
+            Poser dès le début l'idée que la réussite d'un projet n'est pas
+            seulement une réussite de programmation. Elle repose aussi sur la
+            capacité à collaborer, à transmettre et à livrer quelque chose de
+            fiable dans le temps.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 1</div>
+              <h2>Les risques d'un projet non structuré</h2>
+              <p class="lead">
+                Quand la structure manque, les problèmes n'apparaissent pas
+                toujours comme des erreurs spectaculaires. Ils se diffusent dans
+                tout le projet.
+              </p>
+            </div>
+            <div class="section-number">01</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <p class="mini">Risques fréquents</p>
+              <ul>
+                <li>Objectifs ambigus ou mouvants</li>
+                <li>Travail dupliqué ou contradictoire</li>
+                <li>Conflits de versions et pertes de modifications</li>
+                <li>Fonctionnalités impossibles à démontrer proprement</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Conséquences observables</p>
+              <ul>
+                <li>Le projet marche "chez moi" mais pas ailleurs</li>
+                <li>On ne sait plus qui a décidé quoi ni pourquoi</li>
+                <li>La soutenance devient une succession d'excuses</li>
+                <li>Le temps est consommé à réparer au lieu d'avancer</li>
+              </ul>
+            </div>
+          </div>
+          <div class="grid-3" style="margin-top: 16px;">
+            <div class="card">
+              <h3>Risque humain</h3>
+              <p>Le savoir reste localisé, la reprise devient coûteuse.</p>
+            </div>
+            <div class="card">
+              <h3>Risque technique</h3>
+              <p>Les erreurs se propagent faute de tests et de revues.</p>
+            </div>
+            <div class="card">
+              <h3>Risque projet</h3>
+              <p>Le pilotage devient flou et la qualité finale imprévisible.</p>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Exemple ResaMat :</strong> sans structure, deux membres
+              modifient en parallèle les règles de réservation, personne ne sait
+              quelle version est la bonne, et la démonstration échoue le jour de
+              la soutenance parce que la base locale n'a pas le même état.
+            </p>
+          </div>
+          <aside class="notes">
+            Insister sur le fait que l'industrialisation sert à réduire des
+            risques concrets, pas à ajouter de la bureaucratie. Chaque pratique
+            du cours doit être présentée comme une réponse à un risque précis.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : projet artisanal ou projet industrialisé ?</h2>
+              <p class="lead">
+                Avant les outils détaillés, on peut déjà comparer deux façons
+                radicalement différentes de faire exister le même projet.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">Projet_Reservation_Final/
+app_final2.py
+base_test_ok.sql
+notes_julie.txt
+capture-finale.png</div>
+              <ul>
+                <li>Aucune structure claire entre code, données et documentation</li>
+                <li>Le projet repose sur des fichiers personnels et peu explicites</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">resamat/
+README.md
+docker-compose.yml
+apps/api/
+apps/web/
+docs/
+tests/
+migrations/</div>
+              <ul>
+                <li>Le dépôt montre immédiatement comment le projet est organisé</li>
+                <li>Les artefacts essentiels sont visibles et séparés proprement</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> dans le premier cas, ResaMat reste un prototype fragile. Dans le second, il devient un projet que l'on peut piloter, évaluer et transmettre.
+          </div>
+          <aside class="notes">
+            Cette première comparaison pose le sens général du cours. Il s'agit
+            de montrer qu'avant même de parler d'un outil précis, la posture de
+            travail change profondément la valeur du projet.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 2</div>
+              <h2>Cadrer le besoin avant de produire</h2>
+              <p class="lead">
+                Avant d'écrire du code, il faut être capable d'expliquer ce que
+                l'on cherche à résoudre et les limites de ce que l'on va livrer.
+              </p>
+            </div>
+            <div class="section-number">02</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <p class="mini">Questions fondamentales</p>
+              <ul>
+                <li><strong>Objectif :</strong> quelle valeur apporte le projet ?</li>
+                <li><strong>Périmètre :</strong> que traite-t-on maintenant, plus tard ou jamais ?</li>
+                <li><strong>Contraintes :</strong> délai, outils, ressources, réglementations</li>
+                <li><strong>Critères d'acceptation :</strong> sur quoi jugera-t-on la réussite ?</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Erreurs classiques</p>
+              <ul>
+                <li>Confondre une idée générale avec un besoin précis</li>
+                <li>Promettre trop large pour rassurer le commanditaire</li>
+                <li>Oublier les contraintes réelles de temps ou de compétences</li>
+                <li>Évaluer le projet seulement à l'intuition</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Bon réflexe :</strong> si une exigence ne peut pas être
+              reformulée clairement ni vérifiée, elle n'est pas encore assez
+              cadrée pour guider le travail.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Application à ResaMat :</strong> l'objectif n'est pas
+              "faire une appli moderne", mais par exemple "permettre à un
+              étudiant de réserver un appareil disponible pour un créneau donné,
+              avec validation visible et retour enregistré".
+            </p>
+          </div>
+          <aside class="notes">
+            Montrer la différence entre besoin, solution et fonctionnalité.
+            Beaucoup d'équipes sautent directement vers la solution. Cette slide
+            doit rappeler que le cadrage sert justement à éviter ce raccourci.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 2</div>
+              <h2>Du cahier des charges aux critères d'acceptation</h2>
+              <p class="lead">
+                Le cahier des charges n'est pas un document décoratif. C'est la
+                référence qui aligne l'équipe sur ce qu'il faut vraiment livrer.
+              </p>
+            </div>
+            <div class="section-number">02</div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p class="mini">Contenu minimal</p>
+              <ul>
+                <li>Contexte et problème traité</li>
+                <li>Utilisateurs ciblés</li>
+                <li>Fonctionnalités attendues</li>
+                <li>Contraintes et exclusions</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Critères d'acceptation</p>
+              <ul>
+                <li>Observables et testables</li>
+                <li>Liés à des usages réels</li>
+                <li>Compris de la même façon par tous</li>
+                <li>Compatibles avec le périmètre annoncé</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Utilité projet</p>
+              <ul>
+                <li>Aider à prioriser</li>
+                <li>Arbitrer quand le temps manque</li>
+                <li>Justifier des choix en soutenance</li>
+                <li>Éviter la dérive fonctionnelle</li>
+              </ul>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Critères d'acceptation ResaMat :</strong> un utilisateur
+              connecté voit uniquement le matériel disponible, une réservation ne
+              peut pas chevaucher un prêt validé, et un retour met automatiquement
+              le matériel à nouveau en état "disponible".
+            </p>
+          </div>
+          <aside class="notes">
+            Expliquer qu'un cahier des charges bien utilisé n'est pas forcément
+            un document très long. Ce qui compte, c'est qu'il fixe un vocabulaire
+            commun et qu'il permette de savoir quand une tâche est réellement finie.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : mauvais et bon cahier des charges</h2>
+              <p class="lead">
+                Le même projet peut être impossible à piloter ou très clair,
+                selon la manière dont le besoin est formulé.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">Titre : Application de gestion de matériel
+But : faire une application moderne
+Fonctions : réservation, stock, incidents, statistiques, mails, QR codes
+Contraintes : à voir plus tard</div>
+              <ul>
+                <li>Tout est mélangé dans une promesse trop large</li>
+                <li>On ne sait pas ce qui sera réellement livré en priorité</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">Contexte : l'IUT prête caméras, micros et trépieds.
+Utilisateurs : étudiant, enseignant, gestionnaire de stock.
+Périmètre V1 : consulter le stock, réserver, valider les prêts longs, enregistrer un retour.
+Hors périmètre : facturation, QR code, application mobile.</div>
+              <ul>
+                <li>Le document sert vraiment de base de travail à l'équipe</li>
+                <li>Le périmètre et les exclusions sont lisibles dès la première lecture</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> avec le mauvais cadrage, l'équipe débat en permanence de ce qu'il faut construire. Avec le bon cadrage, elle peut découper le travail, prioriser et démontrer le résultat.
+          </div>
+          <aside class="notes">
+            Ici, il faut vraiment comparer deux formulations de besoin. Le but
+            est de rendre visible la différence entre une demande vague et une
+            demande exploitable. L'étudiant doit comprendre qu'un bon cahier des
+            charges aide déjà à construire le projet.
+          </aside>
+        </section>
+
+        <section class="exercise-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Mini exercice</div>
+              <h2>Réécrire le cadrage de CovoitIUT</h2>
+              <p class="lead">
+                À partir d'un besoin flou, identifiez ce qu'il manque et proposez
+                une reformulation plus exploitable.
+              </p>
+            </div>
+            <div class="section-number">EX</div>
+          </div>
+          <div class="exercise-layout">
+            <div class="exercise-box">
+              <p class="mini">Support</p>
+              <div class="exercise-prompt">« Créer une super application de covoiturage pour les étudiants de l'IUT avec cartes, messagerie, notes, favoris, alertes, paiement et plein d'options utiles. »</div>
+              <p class="mini" style="margin-top: 14px;">Consigne</p>
+              <ul>
+                <li>Relevez 3 éléments trop vagues ou trop larges</li>
+                <li>Proposez un périmètre V1 réaliste pour CovoitIUT</li>
+                <li>Écrivez 1 critère d'acceptation testable</li>
+              </ul>
+            </div>
+            <div class="exercise-box">
+              <p class="mini">Ce qu'on attend</p>
+              <ul>
+                <li>Des utilisateurs identifiés explicitement</li>
+                <li>Une séparation claire entre inclus et hors périmètre</li>
+                <li>Un résultat observable en démonstration ou en test</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Faire produire un mini extrait de cahier des charges sur un autre projet. L'objectif est
+            que les étudiants passent immédiatement de la critique à la reformulation.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 3</div>
+              <h2>Organiser l'équipe et rendre le travail visible</h2>
+              <p class="lead">
+                La collaboration devient efficace quand le travail est découpé,
+                attribué, relu et replacé dans une vue d'ensemble partagée.
+              </p>
+            </div>
+            <div class="section-number">03</div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span>Dépôt</span>
+              <p>Centraliser le code, l'historique et les versions utiles.</p>
+            </div>
+            <div class="step">
+              <span>Tickets</span>
+              <p>Décrire des tâches actionnables liées à un besoin identifiable.</p>
+            </div>
+            <div class="step">
+              <span>Branches</span>
+              <p>Isoler un changement pour le développer sans casser la base commune.</p>
+            </div>
+            <div class="step">
+              <span>Merge request</span>
+              <p>Présenter le changement, son contexte et sa portée.</p>
+            </div>
+            <div class="step">
+              <span>Revue</span>
+              <p>Vérifier qualité, lisibilité, cohérence et risques de régression.</p>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Principe de base :</strong> un bon workflow ne doit pas être
+              spectaculaire, mais suffisamment simple pour être respecté tous les jours.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Application à ResaMat :</strong> un ticket peut porter sur
+              "ajouter la gestion des retours", une branche isole ce changement,
+              puis la merge request explique ce qui a été ajouté côté interface,
+              API et base de données.
+            </p>
+          </div>
+          <aside class="notes">
+            Présenter le flux comme une chaîne logique. Chaque brique résout un
+            problème : le ticket clarifie, la branche isole, la merge request
+            expose, la revue contrôle, la fusion intègre proprement.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 3</div>
+              <h2>Que vérifie-t-on vraiment dans une merge request ?</h2>
+              <p class="lead">
+                La revue de code ne consiste pas seulement à chercher des fautes
+                de syntaxe. Elle sert aussi à partager la compréhension du projet.
+              </p>
+            </div>
+            <div class="section-number">03</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <p class="mini">Checklist de revue</p>
+              <ul>
+                <li>Le changement répond-il au ticket annoncé ?</li>
+                <li>Le code est-il compréhensible et cohérent avec l'existant ?</li>
+                <li>Les effets de bord sont-ils identifiés ?</li>
+                <li>Les tests et la documentation ont-ils suivi ?</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Ce que la revue apporte</p>
+              <ul>
+                <li>Détection précoce de défauts</li>
+                <li>Montée en compétence collective</li>
+                <li>Meilleure traçabilité des décisions</li>
+                <li>Réduction de la dépendance à une seule personne</li>
+              </ul>
+            </div>
+          </div>
+          <div class="grid-3" style="margin-top: 16px;">
+            <div class="card">
+              <h3>Bonne MR</h3>
+              <p>Petite, ciblée, liée à un ticket, avec contexte et captures si utile.</p>
+            </div>
+            <div class="card">
+              <h3>Mauvaise MR</h3>
+              <p>Massive, mal décrite, mélangeant plusieurs sujets sans justification.</p>
+            </div>
+            <div class="card">
+              <h3>Effet pédagogique</h3>
+              <p>La revue apprend à argumenter des choix et à accepter la critique technique.</p>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>MR ResaMat réussie :</strong> "Ajout de la validation
+              enseignant pour les emprunts longue durée", avec lien vers ticket,
+              captures de l'interface, impact sur l'API et tests mis à jour.
+            </p>
+          </div>
+          <aside class="notes">
+            Mettre l'accent sur la culture de revue. L'objectif n'est pas de
+            juger la personne mais d'améliorer le livrable. C'est aussi un très
+            bon entraînement pour la soutenance, car il faut expliquer ses choix.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : mauvais et bon flux d'équipe</h2>
+              <p class="lead">
+                Le projet progresse mieux quand les changements sont visibles,
+                petits et reliés à une intention claire.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">MR : "gros update"
+Description : correction de trucs + nouvelle page + modif base
+Commits : 27
+Ticket lié : aucun</div>
+              <ul>
+                <li>Impossible de relire proprement le changement</li>
+                <li>Le lien entre le besoin et le code a disparu</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">Ticket #24 : Enregistrer le retour d'un matériel
+Branche : feat/24-retour-materiel
+MR : "Ajout de l'écran de retour et mise à jour du statut disponible"
+Checks : captures + tests + impact BDD</div>
+              <ul>
+                <li>Le changement est relisible et rattaché à une intention claire</li>
+                <li>La revue peut vérifier le fond au lieu de deviner le contexte</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> dans le mauvais cas, on découvre les problèmes après fusion. Dans le bon cas, la revue repère tôt les oublis de tests, les effets de bord et les décisions contestables.
+          </div>
+          <aside class="notes">
+            Faire le parallèle avec la vie réelle d'une équipe. Le mauvais
+            exemple donne une impression de vitesse mais détruit la traçabilité.
+            Le bon exemple ralentit un peu au début mais accélère sur la durée.
+          </aside>
+        </section>
+
+        <section class="exercise-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Mini exercice</div>
+              <h2>Relire une MR CovoitIUT</h2>
+              <p class="lead">
+                En vous mettant dans la peau du reviewer, listez ce qu'il manque
+                avant de pouvoir fusionner sereinement.
+              </p>
+            </div>
+            <div class="section-number">EX</div>
+          </div>
+          <div class="exercise-layout">
+            <div class="exercise-box">
+              <p class="mini">MR à relire</p>
+              <div class="exercise-prompt">Titre : "update trajets"
+Description : "j'ai ajouté les réservations de places + corrigé deux bugs + changé la base"
+Ticket : aucun
+Tests : non précisés
+Captures : non fournies</div>
+            </div>
+            <div class="exercise-box">
+              <p class="mini">Consigne</p>
+              <ul>
+                <li>Donnez 4 questions que vous poseriez avant fusion</li>
+                <li>Identifiez 2 éléments de traçabilité absents</li>
+                <li>Proposez un meilleur titre de MR</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            L'exercice doit entraîner la lecture critique d'une merge request sur un autre contexte métier.
+            On peut corriger à l'oral en reliant les remarques aux bonnes pratiques vues juste avant.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 4</div>
+              <h2>Maîtriser l'environnement de travail</h2>
+              <p class="lead">
+                Un projet est vraiment maîtrisé quand il peut être relancé sur
+                une autre machine sans reconstruction artisanale.
+              </p>
+            </div>
+            <div class="section-number">04</div>
+          </div>
+          <div class="panel">
+            <p class="mini">Comparer les approches</p>
+            <table class="comparison">
+              <thead>
+                <tr>
+                  <th>Approche</th>
+                  <th>Ce qu'elle isole</th>
+                  <th>Quand l'utiliser</th>
+                  <th>Point de vigilance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>venv</strong></td>
+                  <td>Dépendances Python</td>
+                  <td>Projet simple centré sur un langage</td>
+                  <td>Ne règle pas tous les écarts système</td>
+                </tr>
+                <tr>
+                  <td><strong>Conteneur</strong></td>
+                  <td>Application et environnement d'exécution</td>
+                  <td>Projet multi-services ou déploiement proche du réel</td>
+                  <td>Plus de complexité de maintenance</td>
+                </tr>
+                <tr>
+                  <td><strong>Dev Container</strong></td>
+                  <td>Poste de développement partagé</td>
+                  <td>Travail d'équipe avec environnement homogène</td>
+                  <td>Dépend de l'écosystème de l'IDE</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pill-list">
+            <div class="pill">Versions verrouillées</div>
+            <div class="pill">Installation répétable</div>
+            <div class="pill">Démarrage documenté</div>
+            <div class="pill">Mêmes commandes pour tous</div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Application à ResaMat :</strong> le projet peut contenir un
+              front web, une API et une base PostgreSQL. Si l'équipe ne partage
+              pas le même environnement, les réservations ou les migrations de
+              base peuvent se comporter différemment selon les postes.
+            </p>
+          </div>
+          <aside class="notes">
+            Faire sentir que l'environnement est une partie du livrable. Si deux
+            membres de l'équipe utilisent des versions ou des outils incompatibles,
+            le projet devient plus fragile même si le code est correct.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 4</div>
+              <h2>Reproductibilité : le vrai test de maturité</h2>
+              <p class="lead">
+                La question à se poser est simple : un nouvel arrivant peut-il
+                installer, lancer et tester le projet sans aide orale permanente ?
+              </p>
+            </div>
+            <div class="section-number">04</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <p class="mini">Checklist d'onboarding</p>
+              <ul>
+                <li>Pré-requis listés clairement</li>
+                <li>Commandes d'installation prêtes à l'emploi</li>
+                <li>Variables d'environnement expliquées</li>
+                <li>Script ou procédure de démarrage disponible</li>
+                <li>Tests de base exécutables immédiatement</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Signaux d'alerte</p>
+              <ul>
+                <li>"Il faut que je te montre sur ma machine"</li>
+                <li>Dépendances non versionnées</li>
+                <li>Configuration dispersée dans plusieurs endroits</li>
+                <li>Étapes implicites oubliées dans le README</li>
+                <li>Différences invisibles entre postes</li>
+              </ul>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Test simple sur ResaMat :</strong> demander à un nouveau
+              membre d'installer le projet, lancer la base, créer un compte de
+              démonstration et effectuer une réservation en suivant seulement le README.
+            </p>
+          </div>
+          <aside class="notes">
+            Utiliser ici un exemple concret d'arrivée d'un nouveau membre dans
+            l'équipe. Si l'installation prend deux jours ou nécessite dix messages,
+            le projet n'est pas suffisamment industrialisé.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : environnement fragile ou reproductible ?</h2>
+              <p class="lead">
+                C'est souvent l'environnement, plus que le code, qui révèle le
+                vrai niveau de maturité d'un projet étudiant.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">README
+1. Installez Python et Node
+2. Lancez postgres si besoin
+3. Demandez-moi le fichier .env
+4. Importez ma base locale si ça ne marche pas</div>
+              <ul>
+                <li>Des étapes critiques restent orales ou implicites</li>
+                <li>Le projet n'est pas réellement reproductible</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">README
+cp .env.example .env
+docker compose up -d
+make seed-demo
+make test
+Accès démo : etudiant1@iut.fr / demo1234</div>
+              <ul>
+                <li>Le démarrage local peut être testé par n'importe quel membre</li>
+                <li>Le jeu de données de démonstration est reproductible</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> le mauvais exemple bloque l'onboarding et crée des bugs fantômes. Le bon exemple permet de tester, corriger et démontrer ResaMat sur n'importe quel poste correctement préparé.
+          </div>
+          <aside class="notes">
+            Cette slide doit faire comprendre qu'un environnement documenté n'est
+            pas un confort. C'est une condition de travail partagée et une preuve
+            de maîtrise technique.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 5</div>
+              <h2>Tester en continu pour sécuriser les évolutions</h2>
+              <p class="lead">
+                Le test n'est pas une phase terminale. C'est un mécanisme de
+                retour rapide qui évite d'accumuler de l'incertitude.
+              </p>
+            </div>
+            <div class="section-number">05</div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p class="mini">Pourquoi tester tôt</p>
+              <ul>
+                <li>Détecter rapidement les erreurs</li>
+                <li>Réduire le coût de correction</li>
+                <li>Conserver un projet modifiable</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Tests unitaires</p>
+              <ul>
+                <li>Valident une brique isolée</li>
+                <li>Documentent les comportements attendus</li>
+                <li>Sécurisent le refactoring</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Qualification / intégration</p>
+              <ul>
+                <li>Vérifient les interactions entre composants</li>
+                <li>Approchent un usage réel</li>
+                <li>Repèrent les ruptures invisibles en local</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Idée clé :</strong> tester, c'est produire de la confiance.
+              Sans tests, toute évolution devient plus risquée que nécessaire.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Tests ResaMat :</strong> unitaire pour vérifier le calcul
+              de disponibilité, intégration pour vérifier qu'une réservation crée
+              bien l'entrée attendue en base et bloque un second emprunt sur le
+              même créneau.
+            </p>
+          </div>
+          <aside class="notes">
+            Expliquer qu'il ne s'agit pas de tester absolument tout, mais de
+            protéger les comportements critiques. Les tests servent autant à
+            détecter qu'à prouver que l'on maîtrise encore le système.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 5</div>
+              <h2>Intégrer les tests au flux projet</h2>
+              <p class="lead">
+                Les tests deviennent vraiment utiles quand ils sont reliés au
+                rythme quotidien du développement et aux points de contrôle du projet.
+              </p>
+            </div>
+            <div class="section-number">05</div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span>Coder</span>
+              <p>Développer une petite évolution liée à un ticket précis.</p>
+            </div>
+            <div class="step">
+              <span>Tester local</span>
+              <p>Vérifier immédiatement avant de partager le changement.</p>
+            </div>
+            <div class="step">
+              <span>Ouvrir MR</span>
+              <p>Donner le contexte et exposer les validations réalisées.</p>
+            </div>
+            <div class="step">
+              <span>CI / contrôle</span>
+              <p>Lancer automatiquement tests, lint ou vérifications utiles.</p>
+            </div>
+            <div class="step">
+              <span>Fusionner</span>
+              <p>Intégrer seulement ce qui reste lisible et maîtrisé.</p>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top: 18px;">
+            <div class="panel">
+              <p class="mini">Bénéfice</p>
+              <p>
+                Les tests cessent d'être une corvée séparée et deviennent une
+                condition normale de progression dans le projet.
+              </p>
+            </div>
+            <div class="panel">
+              <p class="mini">Erreur à éviter</p>
+              <p>
+                Garder les tests pour la fin revient à repousser les problèmes
+                jusqu'au moment où ils coûtent le plus cher.
+              </p>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Pipeline ResaMat :</strong> à chaque MR, on peut lancer les
+              tests de disponibilité, les migrations sur une base temporaire et
+              quelques vérifications de style pour éviter les régressions avant fusion.
+            </p>
+          </div>
+          <aside class="notes">
+            Faire le lien avec l'organisation de l'équipe. Un test utile est un
+            test qui intervient au bon moment : avant la fusion, avant la démo,
+            avant le déploiement. C'est un garde-fou intégré au flux.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : mauvais et bon usage des tests</h2>
+              <p class="lead">
+                Les tests sont parlants quand on compare ce qu'ils empêchent
+                réellement dans un projet concret.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">Validation ResaMat
+- test manuel rapide avant démo
+- vérifier si la page charge
+- réserver "au feeling"</div>
+              <ul>
+                <li>Le cœur métier n'est protégé par aucun test précis</li>
+                <li>Les conflits de réservation restent possibles</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">tests/test_reservations.py
+def test_un_materiel_deja_reserve_n_est_plus_disponible(): ...
+
+tests/test_api_returns.py
+def test_retour_reactive_le_statut_disponible(): ...</div>
+              <ul>
+                <li>Les règles critiques de ResaMat deviennent vérifiables</li>
+                <li>Le pipeline peut bloquer une régression avant fusion</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> dans le mauvais cas, l'équipe apprend les défauts devant le jury ou l'utilisateur. Dans le bon cas, les comportements critiques sont protégés avant même la livraison.
+          </div>
+          <aside class="notes">
+            Montrer que les tests répondent à des risques concrets. Ici, on ne
+            teste pas "pour tester", on protège le cœur métier de ResaMat :
+            disponibilité, réservation, retour et cohérence des données.
+          </aside>
+        </section>
+
+        <section class="exercise-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Mini exercice</div>
+              <h2>Choisir les tests prioritaires de CovoitIUT</h2>
+              <p class="lead">
+                Toutes les vérifications ne se valent pas. L'enjeu est de protéger
+                d'abord les comportements métier les plus risqués.
+              </p>
+            </div>
+            <div class="section-number">EX</div>
+          </div>
+          <div class="exercise-layout">
+            <div class="exercise-box">
+              <p class="mini">Nouveau besoin</p>
+              <div class="exercise-prompt">« Un conducteur publie un trajet avec 3 places.
+Quand un passager réserve, le nombre de places diminue.
+Si le trajet est annulé, il ne doit plus être réservable. »</div>
+            </div>
+            <div class="exercise-box">
+              <p class="mini">Consigne</p>
+              <ul>
+                <li>Citez 2 tests unitaires prioritaires</li>
+                <li>Citez 1 test d'intégration prioritaire</li>
+                <li>Expliquez quel bug métier chaque test doit empêcher</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Le but n'est pas de faire écrire du code complet, mais de faire
+            réfléchir à la hiérarchie des tests et aux risques concrets qu'ils couvrent.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 6</div>
+              <h2>Documenter pour trois publics différents</h2>
+              <p class="lead">
+                Une documentation utile ne répond pas à une obligation abstraite.
+                Elle répond à une vraie question posée par un vrai lecteur.
+              </p>
+            </div>
+            <div class="section-number">06</div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p class="mini">Pour l'équipe</p>
+              <ul>
+                <li>Architecture et conventions</li>
+                <li>Installation et contribution</li>
+                <li>Commandes de tests et de déploiement</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Pour l'utilisateur</p>
+              <ul>
+                <li>Prise en main du produit</li>
+                <li>Parcours d'usage essentiels</li>
+                <li>Dépannage simple et limitations</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Pour la reprise</p>
+              <ul>
+                <li>Choix techniques et arbitrages</li>
+                <li>État actuel du projet</li>
+                <li>Points sensibles et pistes futures</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Règle simple :</strong> si la réponse dépend d'une
+              explication orale répétée, elle mérite probablement d'être documentée.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Documentation ResaMat :</strong> l'équipe a besoin du guide
+              d'installation, l'agent du prêt a besoin d'un mode d'emploi pour
+              valider un retour, et le futur repreneur a besoin de comprendre les
+              règles métier autour du stock et des incidents.
+            </p>
+          </div>
+          <aside class="notes">
+            Expliquer qu'il n'existe pas une documentation unique qui couvre tous
+            les besoins avec la même forme. Il faut adapter le niveau de détail
+            et le support au lecteur ciblé.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 6</div>
+              <h2>Markdown, MkDocs, Sphinx : quel rôle pour quel besoin ?</h2>
+              <p class="lead">
+                Les outils de documentation n'ont de valeur que s'ils s'intègrent
+                dans une routine simple de mise à jour.
+              </p>
+            </div>
+            <div class="section-number">06</div>
+          </div>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Markdown</h3>
+              <p>Parfait pour le README, les guides rapides, les procédures et les notes de version.</p>
+            </div>
+            <div class="card">
+              <h3>MkDocs</h3>
+              <p>Pratique quand on veut une documentation web structurée, légère et facile à naviguer.</p>
+            </div>
+            <div class="card">
+              <h3>Sphinx</h3>
+              <p>Plus riche pour les projets techniques complexes, notamment dans l'écosystème Python.</p>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top: 16px;">
+            <div class="panel">
+              <p class="mini">Routine saine</p>
+              <ul>
+                <li>Mettre à jour la doc dans la même MR que le changement</li>
+                <li>Documenter les commandes et chemins réellement utilisés</li>
+                <li>Revoir la doc lors des démonstrations ou installations</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Mauvaise pratique</p>
+              <ul>
+                <li>Écrire toute la documentation à la veille de la livraison</li>
+                <li>Copier des commandes jamais testées</li>
+                <li>Laisser des captures ou procédures obsolètes</li>
+              </ul>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Organisation ResaMat :</strong> un README explique le
+              lancement local, un site MkDocs regroupe les procédures métier, et
+              une page technique détaille les routes API, les migrations et les
+              choix d'architecture.
+            </p>
+          </div>
+          <aside class="notes">
+            Cette slide doit montrer que l'outil importe moins que la discipline.
+            Une documentation simple mais à jour vaut mieux qu'un site très
+            sophistiqué devenu faux après deux semaines.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : documentation inutile ou réellement utile ?</h2>
+              <p class="lead">
+                La valeur de la documentation se voit immédiatement quand on la
+                confronte à un besoin concret d'installation, d'usage ou de reprise.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">README.md
+# ResaMat
+Application innovante de réservation.
+Projet BUT 3.
+Voir avec l'équipe pour l'installation.</div>
+              <ul>
+                <li>Le lecteur ne peut ni installer ni comprendre le projet</li>
+                <li>L'information utile reste en dehors du document</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">README.md
+## Lancer le projet
+make install
+make dev
+
+docs/utilisateur/retour-materiel.md
+docs/technique/regles-disponibilite.md</div>
+              <ul>
+                <li>Chaque public trouve rapidement le bon niveau d'information</li>
+                <li>La doc soutient l'usage réel du projet</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> le mauvais exemple oblige à redemander sans cesse les mêmes explications. Le bon exemple rend ResaMat installable, utilisable et reprenable sans dépendance orale excessive.
+          </div>
+          <aside class="notes">
+            Cette comparaison parle bien aux étudiants parce qu'ils connaissent
+            tous la frustration d'un projet impossible à lancer. Il faut montrer
+            que la documentation utile répond à des usages réels et répétitifs.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 7</div>
+              <h2>Déployer et sécuriser sans improviser</h2>
+              <p class="lead">
+                Déployer, c'est rendre le projet utilisable ailleurs. Sécuriser,
+                c'est empêcher qu'il devienne fragile dès qu'il quitte le poste
+                de développement.
+              </p>
+            </div>
+            <div class="section-number">07</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <p class="mini">Chaîne de déploiement</p>
+              <ul>
+                <li><strong>Dev :</strong> expérimenter et corriger rapidement</li>
+                <li><strong>Pré-prod / recette :</strong> valider avant exposition réelle</li>
+                <li><strong>Prod :</strong> stabilité, supervision, sauvegarde, traçabilité</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Sécurité minimale indispensable</p>
+              <ul>
+                <li>Secrets hors du dépôt</li>
+                <li>Dépendances identifiées et mises à jour avec méthode</li>
+                <li>Données sensibles repérées et protégées</li>
+                <li>Procédure de retour arrière prévue</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Check-list avant livraison :</strong> configuration validée,
+              comptes d'accès maîtrisés, sauvegarde prête, journalisation active,
+              procédure de déploiement testée et réutilisable.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Application à ResaMat :</strong> la production doit séparer
+              les secrets de connexion à la base, sauvegarder l'historique des
+              prêts, journaliser les actions sensibles et permettre de restaurer
+              rapidement l'état du stock en cas d'incident.
+            </p>
+          </div>
+          <aside class="notes">
+            Montrer que déploiement et sécurité vont ensemble. Un projet qui se
+            déploie vite mais laisse fuiter des secrets ou casse les données n'est
+            pas un projet prêt à être livré.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : déploiement improvisé ou déploiement maîtrisé ?</h2>
+              <p class="lead">
+                Le déploiement révèle immédiatement si l'équipe a travaillé avec
+                méthode ou si elle s'appuie encore sur des manipulations manuelles fragiles.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">Procédure de déploiement
+1. Se connecter au serveur
+2. Coller le mot de passe BDD
+3. git pull
+4. Redémarrer si besoin</div>
+              <ul>
+                <li>La sécurité et la reprise après incident ne sont pas traitées</li>
+                <li>La procédure dépend trop d'une mémoire individuelle</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">Déploiement ResaMat
+pre-deploy: backup prêts + restore point
+deploy: image taggée + variables serveur
+post-deploy: smoke test réservation / retour
+rollback: version N-1 en 1 commande</div>
+              <ul>
+                <li>Le déploiement devient rejouable et contrôlé</li>
+                <li>Les données critiques et le retour arrière sont prévus</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> le mauvais exemple transforme chaque mise en ligne en stress et en risque de perte de données. Le bon exemple permet une livraison plus sereine et défendable.
+          </div>
+          <aside class="notes">
+            On veut ici montrer qu'un bon déploiement n'est pas seulement "ça
+            marche sur le serveur". Il faut aussi que cela reste sûr, reproductible
+            et réversible si un problème apparaît.
+          </aside>
+        </section>
+
+        <section class="exercise-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Mini exercice</div>
+              <h2>Préparer la mise en ligne de CovoitIUT</h2>
+              <p class="lead">
+                Avant le déploiement, l'équipe doit être capable d'énoncer une
+                petite checklist de sécurité et de validation.
+              </p>
+            </div>
+            <div class="section-number">EX</div>
+          </div>
+          <div class="exercise-layout">
+            <div class="exercise-box">
+              <p class="mini">Situation</p>
+              <div class="exercise-prompt">Demain, CovoitIUT doit être montré sur un serveur de démonstration.
+La base contient déjà des trajets de test.
+Le compte admin et les variables de connexion existent seulement sur la machine du développeur principal.</div>
+            </div>
+            <div class="exercise-box">
+              <p class="mini">Consigne</p>
+              <ul>
+                <li>Listez 5 vérifications à faire avant la mise en ligne</li>
+                <li>Donnez 1 action de sauvegarde ou retour arrière</li>
+                <li>Donnez 1 test rapide à exécuter juste après déploiement</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Cet exercice fonctionne bien en binôme ou en tableau collectif. Il
+            force à relier sécurité, données, configuration et validation fonctionnelle.
+          </aside>
+        </section>
+
+        <section>
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Partie 8</div>
+              <h2>Soutenir un projet : expliquer, argumenter, démontrer</h2>
+              <p class="lead">
+                La soutenance n'est pas un simple passage final. C'est le moment
+                où l'équipe doit montrer qu'elle comprend ce qu'elle a construit.
+              </p>
+            </div>
+            <div class="section-number">08</div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p class="mini">Expliquer</p>
+              <ul>
+                <li>Présenter le besoin initial</li>
+                <li>Montrer la solution retenue</li>
+                <li>Nommer les choix structurants</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Argumenter</p>
+              <ul>
+                <li>Justifier les compromis réalisés</li>
+                <li>Reconnaître les limites actuelles</li>
+                <li>S'appuyer sur des preuves concrètes</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Démontrer et former</p>
+              <ul>
+                <li>Préparer une démonstration claire</li>
+                <li>Guider l'utilisateur sur les usages essentiels</li>
+                <li>Montrer que le projet peut être repris</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Trame efficace :</strong> besoin, périmètre, méthode,
+              démonstration, preuves de qualité, limites, suite possible.
+            </p>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Démonstration ResaMat :</strong> montrer une réservation,
+              une validation, un retour et un incident simple, puis expliquer
+              quelles décisions d'équipe ont rendu ce scénario fiable et reproductible.
+            </p>
+          </div>
+          <aside class="notes">
+            Insister sur le fait que la soutenance ne récompense pas seulement le
+            résultat final mais la cohérence du chemin. Les étudiants doivent
+            montrer qu'ils ont piloté un projet, pas seulement produit un écran.
+          </aside>
+        </section>
+
+        <section class="compact-slide fil-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">Fil rouge</div>
+              <h2>ResaMat : mauvaise et bonne soutenance</h2>
+              <p class="lead">
+                Le même projet peut sembler fragile ou solide selon la manière
+                dont l'équipe le raconte et le démontre.
+              </p>
+            </div>
+            <div class="section-number">FR</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvais exemple</div>
+              <div class="artifact-snippet">Plan oral
+- on montre vite fait l'appli
+- on a pris React parce qu'on aime bien
+- il reste des bugs mais l'idée est là</div>
+              <ul>
+                <li>Le projet paraît fragile et peu maîtrisé</li>
+                <li>Les choix ne sont pas reliés au besoin ni au travail produit</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bon exemple</div>
+              <div class="artifact-snippet">Plan oral ResaMat
+1. Besoin : gérer le prêt de matériel à l'IUT
+2. Démo : réserver, valider, retourner, déclarer un incident
+3. Preuves : tickets, MR, tests, docs, déploiement
+4. Limites : pas de mobile, pas de QR code en V1</div>
+              <ul>
+                <li>La démonstration suit une narration compréhensible</li>
+                <li>Les preuves montrent que le projet est réellement piloté</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Impact :</strong> dans le mauvais cas, la soutenance ressemble à une justification défensive. Dans le bon cas, elle devient la démonstration cohérente d'un projet réellement piloté.
+          </div>
+          <aside class="notes">
+            Cette slide doit faire le lien final : toutes les pratiques vues
+            avant servent aussi à mieux soutenir le projet. La soutenance n'est
+            pas séparée du reste, elle en est la mise en visibilité.
+          </aside>
+        </section>
+
+        <section class="ai-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">IA dans le projet</div>
+              <h2>Ce que l'IA change réellement dans un projet</h2>
+              <p class="lead">
+                L'IA ne supprime pas le besoin de méthode. Elle déplace la valeur
+                vers le cadrage, le contexte fourni, la vérification et la
+                capacité à intégrer correctement ce qu'elle propose.
+              </p>
+            </div>
+            <div class="section-number">AI</div>
+          </div>
+          <div class="grid-4">
+            <div class="panel">
+              <p class="mini">Plus rapide</p>
+              <ul>
+                <li>Premiers jets de code</li>
+                <li>Documentation ou synthèses</li>
+                <li>Idées de tests ou de refactor</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Plus exigeant</p>
+              <ul>
+                <li>Meilleur cadrage des demandes</li>
+                <li>Contexte plus précis à fournir</li>
+                <li>Validation systématique des sorties</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Ce qui change</p>
+              <ul>
+                <li>Moins de temps sur le brouillon</li>
+                <li>Plus de temps sur la revue</li>
+                <li>Plus de responsabilité sur l'intégration</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">À ne pas croire</p>
+              <ul>
+                <li>L'IA ne comprend pas le projet comme l'équipe</li>
+                <li>Une réponse fluide n'est pas une réponse correcte</li>
+                <li>L'outil n'assume pas la responsabilité finale</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            Cette slide pose le cadre. Les recommandations récentes de GitHub et
+            de NIST convergent : l'IA aide surtout sur l'exploration, la rédaction
+            et l'accélération locale, mais elle augmente l'importance du contexte,
+            de l'évaluation et des règles d'usage dans l'équipe.
+          </aside>
+        </section>
+
+        <section class="ai-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">IA dans le projet</div>
+              <h2>Où l'IA aide vraiment quand on l'utilise bien</h2>
+              <p class="lead">
+                L'IA est la plus utile sur des tâches bornées, relues, et reliées
+                à un objectif clair plutôt que sur des demandes vagues et massives.
+              </p>
+            </div>
+            <div class="section-number">AI</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <p class="mini">Usages efficaces</p>
+              <ul>
+                <li>Reformuler un besoin ou une user story</li>
+                <li>Proposer des critères d'acceptation ou des cas de test</li>
+                <li>Générer un premier jet de README ou de mode opératoire</li>
+                <li>Résumer une merge request avant revue humaine</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Exemple sur ResaMat</p>
+              <ul>
+                <li>Demander 5 cas limites sur la réservation d'un matériel</li>
+                <li>Faire générer un squelette de tests à compléter</li>
+                <li>Obtenir une version initiale du guide de retour matériel</li>
+                <li>Comparer deux formulations de ticket avant ouverture de MR</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <p>
+              <strong>Règle pratique :</strong> utiliser l'IA pour accélérer une
+              étape identifiable, pas pour déléguer un sous-projet complet sans contrôle.
+            </p>
+          </div>
+          <aside class="notes">
+            Rappeler ici un point souvent présent dans les docs GitHub : plus le
+            contexte est utile, plus la réponse a des chances de l'être. Il faut
+            donc préférer des demandes ciblées avec un but clair à une requête
+            du type "fais tout le projet".
+          </aside>
+        </section>
+
+        <section class="ai-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">IA dans le projet</div>
+              <h2>Les risques à connaître avant d'intégrer l'IA</h2>
+              <p class="lead">
+                Utiliser l'IA sans garde-fous peut introduire des erreurs plus
+                discrètes que les bugs classiques : elles paraissent plausibles,
+                mais affaiblissent le projet.
+              </p>
+            </div>
+            <div class="section-number">AI</div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p class="mini">Sorties trompeuses</p>
+              <ul>
+                <li>Code plausible mais faux</li>
+                <li>API inventées ou obsolètes</li>
+                <li>Tests générés qui ne vérifient rien d'important</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Risques sécurité / données</p>
+              <ul>
+                <li>Secrets ou données sensibles copiés dans les prompts</li>
+                <li>Réutilisation de contenu non vérifié</li>
+                <li>Sorties influencées par des contenus non fiables</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mini">Risques projet</p>
+              <ul>
+                <li>Perte de compréhension du code intégré</li>
+                <li>Dépendance excessive à un outil ou à un prompt</li>
+                <li>Réduction de la traçabilité des décisions</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>Repères actuels :</strong> OWASP insiste notamment sur les risques de fuite d'information sensible, de prompt injection, de confiance excessive et d'action trop autonome des systèmes IA.
+          </div>
+          <aside class="notes">
+            Cette slide s'appuie sur les catégories de risques mises en avant par
+            l'OWASP Top 10 for LLM Applications et sur la logique de gouvernance
+            du NIST. Le message n'est pas "n'utilisez pas l'IA", mais "ne la
+            laissez jamais contourner les règles normales de qualité et de sécurité".
+          </aside>
+        </section>
+
+        <section class="ai-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">IA dans le projet</div>
+              <h2>Règles d'équipe pour bien utiliser l'IA</h2>
+              <p class="lead">
+                Une équipe gagne réellement avec l'IA quand elle définit un cadre
+                commun d'usage, de relecture et de protection des informations.
+              </p>
+            </div>
+            <div class="section-number">AI</div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span>Cadrer</span>
+              <p>Choisir les usages autorisés : brouillon, tests, docs, revue, pas décision finale.</p>
+            </div>
+            <div class="step">
+              <span>Protéger</span>
+              <p>Ne pas envoyer de secrets, données personnelles ou informations non partageables.</p>
+            </div>
+            <div class="step">
+              <span>Vérifier</span>
+              <p>Lire, tester, exécuter et challenger toute sortie avant intégration.</p>
+            </div>
+            <div class="step">
+              <span>Tracer</span>
+              <p>Garder le lien entre la demande, le changement obtenu et la validation humaine.</p>
+            </div>
+            <div class="step">
+              <span>Apprendre</span>
+              <p>Utiliser l'IA pour comprendre plus vite, pas pour renoncer à comprendre.</p>
+            </div>
+          </div>
+          <div class="example-card">
+            <p>
+              <strong>Bonne posture :</strong> demander à l'IA une proposition de
+              tests pour ResaMat, puis sélectionner, corriger et justifier ceux
+              qui entrent réellement dans le dépôt.
+            </p>
+          </div>
+          <aside class="notes">
+            Cette slide synthétise l'esprit des bonnes pratiques récentes : garder
+            l'humain responsable, protéger les données, valider les sorties et
+            intégrer l'IA dans le processus existant au lieu de la laisser créer
+            un flux parallèle incontrôlé.
+          </aside>
+        </section>
+
+        <section class="ai-slide">
+          <div class="split-header">
+            <div>
+              <div class="eyebrow">IA dans le projet</div>
+              <h2>Comparer une mauvaise et une bonne posture face à l'IA</h2>
+              <p class="lead">
+                La vraie différence ne vient pas de l'outil utilisé, mais de la
+                façon dont l'équipe l'intègre dans son projet, ses règles et sa revue.
+              </p>
+            </div>
+            <div class="section-number">AI</div>
+          </div>
+          <div class="case-grid">
+            <div class="case-box bad">
+              <div class="case-tag">Mauvaise posture</div>
+              <p>On demande à l'IA de produire à la place de l'équipe, sans cadrage ni vérification sérieuse.</p>
+              <div class="artifact-snippet">Exemples ResaMat
+- "Fais tout le module de réservation de matériel"
+- "Je te colle le .env pour corriger l'authentification"
+- "Si le code proposé compile, on l'ajoute dans la MR"</div>
+              <ul>
+                <li>Le projet va plus vite au début, puis perd en compréhension</li>
+                <li>Les erreurs, secrets ou incohérences arrivent dans le dépôt</li>
+              </ul>
+            </div>
+            <div class="case-box good">
+              <div class="case-tag">Bonne posture</div>
+              <p>On utilise l'IA comme assistant borné, sur des tâches ciblées, relues et reliées à un besoin clair.</p>
+              <div class="artifact-snippet">Exemples ResaMat
+- "Propose 5 cas limites sur le retour d'un matériel"
+- "Rédige un premier jet du README d'installation sans secret"
+- "Compare deux formulations du ticket #24 avant ouverture de MR"</div>
+              <ul>
+                <li>L'équipe gagne du temps sans perdre la maîtrise du projet</li>
+                <li>Les sorties deviennent des brouillons utiles, pas des décisions automatiques</li>
+              </ul>
+            </div>
+          </div>
+          <div class="impact-note">
+            <strong>À retenir :</strong> mauvais usage = l'IA remplace le raisonnement de l'équipe. Bon usage = l'IA accélère une étape, puis l'équipe décide, teste et assume.
+          </div>
+          <aside class="notes">
+            Cette slide sert de synthèse pratique. Le but est de faire comprendre
+            que l'IA n'est ni magique ni interdite : elle devient utile quand
+            elle reste un outil encadré dans le flux normal du projet. Utiliser
+            les exemples ResaMat comme repères concrets, sans transformer la
+            slide en démonstration trop spécifique.
+          </aside>
+        </section>
+
+        <section class="final-slide">
+          <div class="final-hero">
+            <div class="final-copy">
+              <div>
+                <div class="eyebrow">Conclusion</div>
+                <h1>Un projet bien mené se voit immédiatement</h1>
+                <p class="lead">
+                  Quand le besoin est clair, le travail traçable, l'environnement
+                  reproductible et la démonstration préparée, le projet inspire
+                  confiance avant même qu'on lise une ligne de code.
+                </p>
+              </div>
+              <p class="footer-note">
+                Vue présentateur : appuyer sur <strong>S</strong> pour ouvrir les notes.
+              </p>
+            </div>
+            <div class="final-stack">
+              <div class="final-point">
+                <strong>Clair</strong>
+                <span>Le besoin, le périmètre et les décisions sont compréhensibles.</span>
+              </div>
+              <div class="final-point">
+                <strong>Fiable</strong>
+                <span>Le projet peut être relancé, testé, corrigé et livré sans improvisation.</span>
+              </div>
+              <div class="final-point">
+                <strong>Transmissible</strong>
+                <span>Un autre étudiant, un enseignant ou un jury peut reprendre le fil sans repartir de zéro.</span>
+              </div>
+            </div>
+          </div>
+          <div class="final-ribbon">
+            <p>
+              <strong>Dernière idée à retenir :</strong> industrialiser n'est pas
+              complexifier. C'est construire un projet que l'on peut expliquer,
+              partager, maintenir et défendre sereinement.
+            </p>
+          </div>
+          <aside class="notes">
+            Finir sur une idée simple et mémorable. L'industrialisation n'est pas
+            là pour alourdir le travail étudiant, mais pour rendre le projet plus
+            solide, plus lisible et plus crédible devant les utilisateurs comme
+            devant les évaluateurs.
+          </aside>
+        </section>
+      </div>
+    </div>
+
+    <script src="./reveal/dist/reveal.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        controls: true,
+        progress: true,
+        center: false,
+        slideNumber: "c/t",
+        transition: "fade",
+        backgroundTransition: "slide",
+        width: 1440,
+        height: 810,
+        margin: 0.06,
+      });
+
+      let notesWindow = null;
+
+      function getCurrentSlideNotes() {
+        const slide = Reveal.getCurrentSlide();
+        if (!slide) {
+          return {
+            title: "Notes",
+            index: "0/0",
+            body: "<p>Aucune note disponible.</p>",
+          };
+        }
+
+        const heading = slide.querySelector("h1, h2, h3");
+        const notes = slide.querySelector(".notes");
+        const indices = Reveal.getIndices(slide);
+
+        return {
+          title: heading ? heading.textContent.trim() : "Slide",
+          index: `${indices.h + 1}`,
+          body: notes ? notes.innerHTML : "<p>Aucune note pour cette slide.</p>",
+        };
+      }
+
+      function renderNotesWindow() {
+        if (!notesWindow || notesWindow.closed) {
+          return;
+        }
+
+        const notes = getCurrentSlideNotes();
+        notesWindow.document.open();
+        notesWindow.document.write(`
+          <!doctype html>
+          <html lang="fr">
+            <head>
+              <meta charset="utf-8" />
+              <title>Notes presenter</title>
+              <style>
+                body {
+                  margin: 0;
+                  padding: 24px;
+                  background: #f8f3e8;
+                  color: #1f2a24;
+                  font-family: "Avenir Next", "Segoe UI", sans-serif;
+                }
+                .slide-label {
+                  display: inline-block;
+                  margin-bottom: 14px;
+                  padding: 6px 10px;
+                  border-radius: 999px;
+                  background: rgba(200, 97, 47, 0.12);
+                  color: #c8612f;
+                  font-size: 0.75rem;
+                  font-weight: 700;
+                  letter-spacing: 0.08em;
+                  text-transform: uppercase;
+                }
+                h1 {
+                  margin: 0 0 14px 0;
+                  font-size: 1.2rem;
+                  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+                }
+                .notes-body {
+                  color: #4d564f;
+                  line-height: 1.55;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="slide-label">Slide ${notes.index}</div>
+              <h1>${notes.title}</h1>
+              <div class="notes-body">${notes.body}</div>
+            </body>
+          </html>
+        `);
+        notesWindow.document.close();
+      }
+
+      function openNotesWindow() {
+        if (!notesWindow || notesWindow.closed) {
+          notesWindow = window.open("", "reveal-notes", "width=520,height=760");
+        }
+        renderNotesWindow();
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "s" || event.key === "S") {
+          event.preventDefault();
+          openNotesWindow();
+        }
+      });
+
+      Reveal.on("ready", renderNotesWindow);
+      Reveal.on("slidechanged", renderNotesWindow);
+    </script>
+  </body>
+</html>
