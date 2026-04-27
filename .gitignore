@@ -1,1 +1,4 @@
 *prof*
+.DS_Store
+.mypy_cache/
+instruction.md
